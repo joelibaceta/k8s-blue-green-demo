@@ -23,6 +23,19 @@ No uses credenciales personales ni datos sensibles. Todo se borra al cerrar la s
 
 El playground no viene con un cluster listo, así que debes inicializarlo:  
 
-1️⃣ **Inicializa el cluster maestro:**  
+1. **Inicializa el cluster maestro:**  
 ```bash
 kubeadm init --apiserver-advertise-address $(hostname -i) --pod-network-cidr=10.5.0.0/16
+```
+
+2. **Configura kubectl para usar el cluster:**
+(Si sudo no está disponible, usa como root)
+```bash
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+```
+3. **Aplica la red de pods (Kube-router):**
+```bash
+kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter.yaml
+```
+✅ Espera unos segundos hasta que todos los pods estén en estado Running: `kubectl get pods -A`
